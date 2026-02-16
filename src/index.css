@@ -6,50 +6,48 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 0 0% 9%;
+    --background: 222 47% 6%;
+    --foreground: 210 20% 92%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card: 222 40% 8%;
+    --card-foreground: 210 20% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover: 222 40% 8%;
+    --popover-foreground: 210 20% 92%;
 
-    --primary: 152 55% 40%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 222 47% 6%;
 
-    --secondary: 0 0% 94%;
-    --secondary-foreground: 0 0% 25%;
+    --secondary: 217 20% 14%;
+    --secondary-foreground: 210 15% 70%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 217 18% 12%;
+    --muted-foreground: 215 14% 48%;
 
-    --accent: 152 55% 40%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 222 47% 6%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 89%;
-    --input: 0 0% 89%;
-    --ring: 152 55% 40%;
+    --border: 217 16% 16%;
+    --input: 217 16% 16%;
+    --ring: 160 84% 39%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 152 55% 40%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 94%;
-    --sidebar-accent-foreground: 0 0% 25%;
-    --sidebar-border: 0 0% 89%;
-    --sidebar-ring: 152 55% 40%;
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-primary: 160 84% 39%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 20% 14%;
+    --sidebar-accent-foreground: 210 15% 70%;
+    --sidebar-border: 217 16% 14%;
+    --sidebar-ring: 160 84% 39%;
 
-    --emerald: 152 55% 40%;
-    --emerald-light: 152 45% 92%;
-    --emerald-muted: 152 30% 60%;
-    --steel: 210 8% 55%;
-    --steel-light: 210 6% 78%;
+    --emerald: 160 84% 39%;
+    --emerald-glow: 160 84% 39%;
+    --slate-deep: 222 47% 4%;
 
     --font-mono: 'JetBrains Mono', monospace;
     --font-sans: 'Inter', sans-serif;
@@ -73,19 +71,36 @@
 
 @layer components {
   .data-card {
-    @apply bg-card border border-border rounded-xl p-6 shadow-sm;
+    @apply bg-card border border-border rounded-xl p-5 transition-all duration-200;
+  }
+
+  .data-card:hover {
+    border-color: hsl(var(--emerald) / 0.3);
   }
 
   .metric-value {
     font-family: var(--font-mono);
-    @apply text-4xl font-bold tracking-tight;
+    @apply text-3xl font-bold tracking-tight;
   }
 
   .section-label {
-    @apply text-xs font-medium uppercase tracking-widest text-muted-foreground;
+    @apply text-[11px] font-medium uppercase tracking-[0.15em] text-muted-foreground;
   }
 
-  .emerald-indicator {
-    @apply h-2 w-2 rounded-full bg-primary;
+  .sidebar-section {
+    @apply p-4 border-b border-border;
+  }
+
+  .glow-line {
+    box-shadow: 0 0 8px hsl(var(--emerald) / 0.4), 0 0 2px hsl(var(--emerald) / 0.6);
+  }
+
+  .input-label {
+    @apply text-xs font-medium text-muted-foreground mb-2 block;
+  }
+
+  .value-display {
+    font-family: var(--font-mono);
+    @apply text-sm font-semibold text-primary tabular-nums;
   }
 }
