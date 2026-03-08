@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { InputSidebar } from "./grafter/InputSidebar";
 import { MetricCards } from "./grafter/MetricCards";
 import { DegradationChart } from "./grafter/DegradationChart";
+import { SNChart } from "./grafter/SNChart";
 import { MaterialComparison } from "./grafter/MaterialComparison";
 import { CarbonROISimulator } from "./grafter/CarbonROISimulator";
 import { ReportModal } from "./grafter/ReportModal";
@@ -77,6 +78,8 @@ const GrafterDashboard = () => {
           />
 
           <DegradationChart data={degradation} totalCycles={fatigue.cycles} />
+
+          <SNChart strength={result.strength} appliedStress={appliedStress} />
 
           <MaterialComparison />
 
