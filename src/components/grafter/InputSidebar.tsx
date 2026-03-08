@@ -1,6 +1,24 @@
 import { Slider } from "@/components/ui/slider";
-import { Layers, Activity, Zap, Settings2, FlaskConical, RefreshCw } from "lucide-react";
+import { Layers, Activity, Zap, Settings2, FlaskConical, RefreshCw, Sparkles } from "lucide-react";
 import { FIBER, MATRIX, FATIGUE_A, FATIGUE_B } from "@/lib/grafter-engine";
+
+interface MaterialPreset {
+  name: string;
+  fiberE: number;
+  fiberSigma: number;
+  matrixE: number;
+  matrixSigma: number;
+  fatigueA: number;
+  fatigueB: number;
+}
+
+const PRESETS: MaterialPreset[] = [
+  { name: "Juta/PP", fiberE: 26500, fiberSigma: 400, matrixE: 1300, matrixSigma: 30, fatigueA: 12, fatigueB: 10 },
+  { name: "Bambu/PLA", fiberE: 35000, fiberSigma: 500, matrixE: 3500, matrixSigma: 60, fatigueA: 11, fatigueB: 9 },
+  { name: "Linho/Epóxi", fiberE: 50000, fiberSigma: 800, matrixE: 3200, matrixSigma: 75, fatigueA: 13, fatigueB: 11 },
+  { name: "Vidro/Epóxi", fiberE: 72000, fiberSigma: 1500, matrixE: 3200, matrixSigma: 75, fatigueA: 14, fatigueB: 10 },
+  { name: "Carbono/Epóxi", fiberE: 230000, fiberSigma: 3500, matrixE: 3200, matrixSigma: 75, fatigueA: 16, fatigueB: 12 },
+];
 
 interface InputSidebarProps {
   open: boolean;
