@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { InputSidebar } from "./grafter/InputSidebar";
 import { MetricCards } from "./grafter/MetricCards";
 import { DegradationChart } from "./grafter/DegradationChart";
+import { MaterialComparison } from "./grafter/MaterialComparison";
+import { CarbonROISimulator } from "./grafter/CarbonROISimulator";
 import { ReportModal } from "./grafter/ReportModal";
 import { calculateGrafterMetrics, calculateFatigueLife, generateDegradationCurve } from "@/lib/grafter-engine";
 import { Beaker, FileText, PanelLeftClose, PanelLeft } from "lucide-react";
