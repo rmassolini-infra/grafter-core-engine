@@ -6,11 +6,12 @@ import {
 import { MATERIALS, CATEGORY_LABELS, type MaterialData } from "@/lib/materials-data";
 import { BarChart3, Check, X, Leaf } from "lucide-react";
 
-type MetricKey = "tensileStrength" | "flexuralModulus" | "density" | "co2PerKg";
+type MetricKey = "tensileStrength" | "flexuralModulus" | "density" | "co2PerKg" | "fractureToughness";
 
 const METRICS: { key: MetricKey; label: string; unit: string }[] = [
   { key: "tensileStrength", label: "Resistência à Tração", unit: "MPa" },
   { key: "flexuralModulus", label: "Módulo Flexural", unit: "GPa" },
+  { key: "fractureToughness", label: "K₁c (Tenacidade)", unit: "MPa·m¹ᐟ²" },
   { key: "density", label: "Densidade", unit: "g/cm³" },
   { key: "co2PerKg", label: "CO₂ por kg", unit: "kg CO₂" },
 ];
