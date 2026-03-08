@@ -170,6 +170,36 @@ export const InputSidebar = ({
         </div>
       </div>
 
+      {/* Material Presets */}
+      <div className="sidebar-section">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span className="section-label">Presets de Material</span>
+        </div>
+        <div className="flex gap-1.5 flex-wrap">
+          {PRESETS.map((p) => (
+            <button
+              key={p.name}
+              onClick={() => {
+                onFiberEChange(p.fiberE);
+                onFiberSigmaChange(p.fiberSigma);
+                onMatrixEChange(p.matrixE);
+                onMatrixSigmaChange(p.matrixSigma);
+                onFatigueAChange(p.fatigueA);
+                onFatigueBChange(p.fatigueB);
+              }}
+              className={`px-2 py-1 text-[10px] font-mono rounded-md border transition-colors ${
+                fiberE === p.fiberE && fiberSigma === p.fiberSigma && matrixE === p.matrixE
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground"
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Material Properties */}
       <div className="sidebar-section">
         <div className="flex items-center justify-between mb-3">
@@ -188,7 +218,7 @@ export const InputSidebar = ({
         </div>
 
         <div className="space-y-2.5">
-          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fibra (Juta)</span>
+          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fibra</span>
           <NumberInput label="Módulo (E)" value={fiberE} onChange={onFiberEChange} min={1000} max={100000} step={100} unit="MPa" />
           <NumberInput label="Resist. (σᵤ)" value={fiberSigma} onChange={onFiberSigmaChange} min={10} max={2000} step={10} unit="MPa" />
 
