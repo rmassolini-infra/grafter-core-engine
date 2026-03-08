@@ -61,6 +61,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 2.3,
     density: 1.05,
     co2PerKg: 3.5,
+    fractureToughness: 2.2,
     biodegradable: false,
     recyclable: true,
   },
