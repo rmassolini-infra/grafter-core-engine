@@ -39,7 +39,7 @@ export const SNChart = ({ strength, appliedStress, fatigueA, fatigueB }: SNChart
   }, [appliedStress, strength, fatigueA, fatigueB]);
 
   return (
-    <div className="data-card">
+    <div className="data-card" data-chart="sn-curve">
       <div className="flex items-center justify-between mb-1">
         <div>
           <span className="section-label">Curva S-N (Wöhler)</span>
