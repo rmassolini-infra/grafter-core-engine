@@ -6,7 +6,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { formatCycles, ORIENTATION_FACTOR } from "@/lib/grafter-engine";
-import { Beaker, Copy, Check } from "lucide-react";
+import { generatePDFReport } from "@/lib/pdf-report";
+import { Beaker, Copy, Check, Download, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface ReportModalProps {
@@ -35,6 +36,7 @@ export const ReportModal = ({
   fatigueA, fatigueB,
 }: ReportModalProps) => {
   const [copied, setCopied] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const date = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 
   const reportText = `
@@ -115,13 +117,35 @@ NOTAS
             {reportText}
           </pre>
 
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors w-full justify-center"
-          >
-            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-            {copied ? "Copiado!" : "Copiar Relatório"}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-secondary text-foreground text-xs font-medium hover:bg-secondary/80 transition-colors flex-1 justify-center"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? "Copiado!" : "Copiar Texto"}
+            </button>
+            <button
+              onClick={async () => {
+                setExporting(true);
+                try {
+                  await generatePDFReport({
+                    date, vf, aspectRatio, appliedStress,
+                    fiberE, fiberSigma, matrixE, matrixSigma,
+                    stiffness, strength, cycles, stressRatio,
+                    fatigueA, fatigueB,
+                  });
+                } finally {
+                  setExporting(false);
+                }
+              }}
+              disabled={exporting}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors flex-1 justify-center disabled:opacity-50"
+            >
+              {exporting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+              {exporting ? "Gerando..." : "Exportar PDF"}
+            </button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
