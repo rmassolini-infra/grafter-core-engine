@@ -11,7 +11,7 @@ interface DegradationChartProps {
 
 export const DegradationChart = ({ data, totalCycles }: DegradationChartProps) => {
   return (
-    <div className="data-card">
+    <div className="data-card" data-chart="degradation">
       <div className="flex items-center justify-between mb-1">
         <div>
           <span className="section-label">Degradação da Rigidez</span>
