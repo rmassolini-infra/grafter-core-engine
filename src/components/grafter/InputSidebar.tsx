@@ -1,6 +1,24 @@
 import { Slider } from "@/components/ui/slider";
-import { Layers, Activity, Zap, Settings2, FlaskConical, RefreshCw } from "lucide-react";
+import { Layers, Activity, Zap, Settings2, FlaskConical, RefreshCw, Sparkles } from "lucide-react";
 import { FIBER, MATRIX, FATIGUE_A, FATIGUE_B } from "@/lib/grafter-engine";
+
+interface MaterialPreset {
+  name: string;
+  fiberE: number;
+  fiberSigma: number;
+  matrixE: number;
+  matrixSigma: number;
+  fatigueA: number;
+  fatigueB: number;
+}
+
+const PRESETS: MaterialPreset[] = [
+  { name: "Juta/PP", fiberE: 26500, fiberSigma: 400, matrixE: 1300, matrixSigma: 30, fatigueA: 12, fatigueB: 10 },
+  { name: "Bambu/PLA", fiberE: 35000, fiberSigma: 500, matrixE: 3500, matrixSigma: 60, fatigueA: 11, fatigueB: 9 },
+  { name: "Linho/Epóxi", fiberE: 50000, fiberSigma: 800, matrixE: 3200, matrixSigma: 75, fatigueA: 13, fatigueB: 11 },
+  { name: "Vidro/Epóxi", fiberE: 72000, fiberSigma: 1500, matrixE: 3200, matrixSigma: 75, fatigueA: 14, fatigueB: 10 },
+  { name: "Carbono/Epóxi", fiberE: 230000, fiberSigma: 3500, matrixE: 3200, matrixSigma: 75, fatigueA: 16, fatigueB: 12 },
+];
 
 interface InputSidebarProps {
   open: boolean;
@@ -152,6 +170,36 @@ export const InputSidebar = ({
         </div>
       </div>
 
+      {/* Material Presets */}
+      <div className="sidebar-section">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span className="section-label">Presets de Material</span>
+        </div>
+        <div className="flex gap-1.5 flex-wrap">
+          {PRESETS.map((p) => (
+            <button
+              key={p.name}
+              onClick={() => {
+                onFiberEChange(p.fiberE);
+                onFiberSigmaChange(p.fiberSigma);
+                onMatrixEChange(p.matrixE);
+                onMatrixSigmaChange(p.matrixSigma);
+                onFatigueAChange(p.fatigueA);
+                onFatigueBChange(p.fatigueB);
+              }}
+              className={`px-2 py-1 text-[10px] font-mono rounded-md border transition-colors ${
+                fiberE === p.fiberE && fiberSigma === p.fiberSigma && matrixE === p.matrixE
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground"
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Material Properties */}
       <div className="sidebar-section">
         <div className="flex items-center justify-between mb-3">
@@ -170,7 +218,7 @@ export const InputSidebar = ({
         </div>
 
         <div className="space-y-2.5">
-          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fibra (Juta)</span>
+          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fibra</span>
           <NumberInput label="Módulo (E)" value={fiberE} onChange={onFiberEChange} min={1000} max={100000} step={100} unit="MPa" />
           <NumberInput label="Resist. (σᵤ)" value={fiberSigma} onChange={onFiberSigmaChange} min={10} max={2000} step={10} unit="MPa" />
 
