@@ -36,6 +36,7 @@ export const ReportModal = ({
   fatigueA, fatigueB,
 }: ReportModalProps) => {
   const [copied, setCopied] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const date = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 
   const reportText = `
