@@ -124,6 +124,7 @@ export const MaterialComparison = () => {
               <th className="text-left py-2 px-2 font-medium">Material</th>
               <th className="text-right py-2 px-2 font-medium">σ (MPa)</th>
               <th className="text-right py-2 px-2 font-medium">E (GPa)</th>
+              <th className="text-right py-2 px-2 font-medium">K₁c</th>
               <th className="text-right py-2 px-2 font-medium">ρ (g/cm³)</th>
               <th className="text-right py-2 px-2 font-medium">CO₂/kg</th>
               <th className="text-center py-2 px-2 font-medium"><Leaf className="h-3 w-3 inline" /></th>
