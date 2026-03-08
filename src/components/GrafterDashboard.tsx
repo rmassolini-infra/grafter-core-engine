@@ -77,6 +77,10 @@ const GrafterDashboard = () => {
           />
 
           <DegradationChart data={degradation} totalCycles={fatigue.cycles} />
+
+          <MaterialComparison />
+
+          <CarbonROISimulator />
         </main>
       </div>
 
