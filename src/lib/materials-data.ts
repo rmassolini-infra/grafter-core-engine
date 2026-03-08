@@ -35,6 +35,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 3.8,
     density: 1.15,
     co2PerKg: 1.2,
+    fractureToughness: 8.5,
     biodegradable: false,
     recyclable: true,
     source: "Grafter Engine (Halpin-Tsai)",
