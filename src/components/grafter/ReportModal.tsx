@@ -5,7 +5,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { formatCycles, FIBER, MATRIX, FATIGUE_A, FATIGUE_B, ORIENTATION_FACTOR } from "@/lib/grafter-engine";
+import { formatCycles, ORIENTATION_FACTOR } from "@/lib/grafter-engine";
 import { Beaker, Copy, Check } from "lucide-react";
 import { useState } from "react";
 
@@ -19,12 +19,20 @@ interface ReportModalProps {
   strength: number;
   cycles: number;
   stressRatio: number;
+  fiberE: number;
+  fiberSigma: number;
+  matrixE: number;
+  matrixSigma: number;
+  fatigueA: number;
+  fatigueB: number;
 }
 
 export const ReportModal = ({
   open, onClose,
   vf, aspectRatio, appliedStress,
   stiffness, strength, cycles, stressRatio,
+  fiberE, fiberSigma, matrixE, matrixSigma,
+  fatigueA, fatigueB,
 }: ReportModalProps) => {
   const [copied, setCopied] = useState(false);
   const date = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
@@ -41,8 +49,8 @@ PARÂMETROS DE ENTRADA
   Tensão Aplicada (σ_app):  ${appliedStress} MPa
 
 MATERIAIS
-  Fibra: ${FIBER.name} (E = ${FIBER.E / 1000} GPa, σ_u = ${FIBER.sigma_u} MPa)
-  Matriz: ${MATRIX.name} (E = ${MATRIX.E / 1000} GPa, σ_u = ${MATRIX.sigma_u} MPa)
+  Fibra: E = ${(fiberE / 1000).toFixed(1)} GPa, σ_u = ${fiberSigma} MPa
+  Matriz: E = ${(matrixE / 1000).toFixed(1)} GPa, σ_u = ${matrixSigma} MPa
   Fator de Orientação: ${ORIENTATION_FACTOR}
 
 RESULTADOS — MECÂNICA ESTÁTICA
@@ -51,7 +59,7 @@ RESULTADOS — MECÂNICA ESTÁTICA
 
 RESULTADOS — FADIGA (Laribi et al.)
   Razão de Tensão (σ_app/σ_max): ${stressRatio.toFixed(4)}
-  Constantes: A = ${FATIGUE_A}, B = ${FATIGUE_B}
+  Constantes: A = ${fatigueA}, B = ${fatigueB}
   Vida Útil Estimada:       ${cycles > 0 ? `${formatCycles(cycles)} ciclos (${cycles.toLocaleString("pt-BR")})` : "N/A (σ_app ≥ σ_max)"}
   Modelo: log(N_f) = A - B·(σ_app/σ_max)
 
@@ -88,7 +96,6 @@ NOTAS
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
-          {/* Quick summary cards */}
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-secondary rounded-lg p-3 text-center">
               <span className="text-[10px] text-muted-foreground block mb-1">Rigidez</span>
@@ -104,12 +111,10 @@ NOTAS
             </div>
           </div>
 
-          {/* Full report */}
           <pre className="bg-background border border-border rounded-lg p-4 text-[11px] text-foreground font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto">
             {reportText}
           </pre>
 
-          {/* Copy button */}
           <button
             onClick={handleCopy}
             className="flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors w-full justify-center"

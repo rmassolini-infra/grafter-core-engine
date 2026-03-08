@@ -17,12 +17,12 @@ const GrafterDashboard = () => {
   const [reportOpen, setReportOpen] = useState(false);
 
   // Editable material & fatigue constants
-  const [fiberE, setFiberE] = useState(FIBER.E);
-  const [fiberSigma, setFiberSigma] = useState(FIBER.sigma_u);
-  const [matrixE, setMatrixE] = useState(MATRIX.E);
-  const [matrixSigma, setMatrixSigma] = useState(MATRIX.sigma_u);
-  const [fatigueA, setFatigueA] = useState(FATIGUE_A);
-  const [fatigueB, setFatigueB] = useState(FATIGUE_B);
+  const [fiberE, setFiberE] = useState<number>(FIBER.E);
+  const [fiberSigma, setFiberSigma] = useState<number>(FIBER.sigma_u);
+  const [matrixE, setMatrixE] = useState<number>(MATRIX.E);
+  const [matrixSigma, setMatrixSigma] = useState<number>(MATRIX.sigma_u);
+  const [fatigueA, setFatigueA] = useState<number>(FATIGUE_A);
+  const [fatigueB, setFatigueB] = useState<number>(FATIGUE_B);
 
   const result = useMemo(
     () => calculateGrafterMetrics(vf, aspectRatio, fiberE, fiberSigma, matrixE, matrixSigma),
