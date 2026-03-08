@@ -6,11 +6,12 @@ import {
 import { MATERIALS, CATEGORY_LABELS, type MaterialData } from "@/lib/materials-data";
 import { BarChart3, Check, X, Leaf } from "lucide-react";
 
-type MetricKey = "tensileStrength" | "flexuralModulus" | "density" | "co2PerKg";
+type MetricKey = "tensileStrength" | "flexuralModulus" | "density" | "co2PerKg" | "fractureToughness";
 
 const METRICS: { key: MetricKey; label: string; unit: string }[] = [
   { key: "tensileStrength", label: "Resistência à Tração", unit: "MPa" },
   { key: "flexuralModulus", label: "Módulo Flexural", unit: "GPa" },
+  { key: "fractureToughness", label: "K₁c (Tenacidade)", unit: "MPa·m¹ᐟ²" },
   { key: "density", label: "Densidade", unit: "g/cm³" },
   { key: "co2PerKg", label: "CO₂ por kg", unit: "kg CO₂" },
 ];
@@ -123,6 +124,7 @@ export const MaterialComparison = () => {
               <th className="text-left py-2 px-2 font-medium">Material</th>
               <th className="text-right py-2 px-2 font-medium">σ (MPa)</th>
               <th className="text-right py-2 px-2 font-medium">E (GPa)</th>
+              <th className="text-right py-2 px-2 font-medium">K₁c</th>
               <th className="text-right py-2 px-2 font-medium">ρ (g/cm³)</th>
               <th className="text-right py-2 px-2 font-medium">CO₂/kg</th>
               <th className="text-center py-2 px-2 font-medium"><Leaf className="h-3 w-3 inline" /></th>
@@ -139,6 +141,7 @@ export const MaterialComparison = () => {
                 <td className="py-2 px-2 text-foreground">{m.name}</td>
                 <td className="py-2 px-2 text-right">{m.tensileStrength}</td>
                 <td className="py-2 px-2 text-right">{m.flexuralModulus}</td>
+                <td className="py-2 px-2 text-right">{m.fractureToughness}</td>
                 <td className="py-2 px-2 text-right">{m.density}</td>
                 <td className="py-2 px-2 text-right">{m.co2PerKg}</td>
                 <td className="py-2 px-2 text-center">

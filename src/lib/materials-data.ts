@@ -6,6 +6,7 @@ export interface MaterialData {
   flexuralModulus: number; // GPa
   density: number; // g/cm³
   co2PerKg: number; // kg CO2 per kg produced
+  fractureToughness: number; // K1c in MPa·m^1/2
   biodegradable: boolean;
   recyclable: boolean;
   source?: string;
@@ -21,6 +22,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 6.41,
     density: 1.35,
     co2PerKg: 0.8,
+    fractureToughness: 5.2,
     biodegradable: true,
     recyclable: true,
     source: "Tang et al., Nat. Commun. 2025",
@@ -33,6 +35,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 3.8,
     density: 1.15,
     co2PerKg: 1.2,
+    fractureToughness: 8.5,
     biodegradable: false,
     recyclable: true,
     source: "Grafter Engine (Halpin-Tsai)",
@@ -46,6 +49,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 1.2,
     density: 0.96,
     co2PerKg: 1.8,
+    fractureToughness: 1.5,
     biodegradable: false,
     recyclable: true,
   },
@@ -57,6 +61,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 2.3,
     density: 1.05,
     co2PerKg: 3.5,
+    fractureToughness: 2.2,
     biodegradable: false,
     recyclable: true,
   },
@@ -68,6 +73,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 3.5,
     density: 1.24,
     co2PerKg: 1.3,
+    fractureToughness: 2.0,
     biodegradable: true,
     recyclable: false,
   },
@@ -79,6 +85,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 3.1,
     density: 1.19,
     co2PerKg: 4.2,
+    fractureToughness: 1.0,
     biodegradable: false,
     recyclable: true,
   },
@@ -91,6 +98,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 15,
     density: 1.85,
     co2PerKg: 8.1,
+    fractureToughness: 30,
     biodegradable: false,
     recyclable: false,
   },
@@ -102,6 +110,7 @@ export const MATERIALS: MaterialData[] = [
     flexuralModulus: 40,
     density: 1.55,
     co2PerKg: 29,
+    fractureToughness: 40,
     biodegradable: false,
     recyclable: false,
   },
