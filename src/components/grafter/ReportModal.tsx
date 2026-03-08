@@ -6,7 +6,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { formatCycles, ORIENTATION_FACTOR } from "@/lib/grafter-engine";
-import { Beaker, Copy, Check } from "lucide-react";
+import { generatePDFReport } from "@/lib/pdf-report";
+import { Beaker, Copy, Check, Download, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface ReportModalProps {
