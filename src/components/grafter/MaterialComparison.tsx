@@ -141,6 +141,7 @@ export const MaterialComparison = () => {
                 <td className="py-2 px-2 text-foreground">{m.name}</td>
                 <td className="py-2 px-2 text-right">{m.tensileStrength}</td>
                 <td className="py-2 px-2 text-right">{m.flexuralModulus}</td>
+                <td className="py-2 px-2 text-right">{m.fractureToughness}</td>
                 <td className="py-2 px-2 text-right">{m.density}</td>
                 <td className="py-2 px-2 text-right">{m.co2PerKg}</td>
                 <td className="py-2 px-2 text-center">
