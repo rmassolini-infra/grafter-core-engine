@@ -5,6 +5,7 @@ import { DegradationChart } from "./grafter/DegradationChart";
 import { SNChart } from "./grafter/SNChart";
 import { MaterialComparison } from "./grafter/MaterialComparison";
 import { CarbonROISimulator } from "./grafter/CarbonROISimulator";
+import { RadarComparison } from "./grafter/RadarComparison";
 import { ReportModal } from "./grafter/ReportModal";
 import { calculateGrafterMetrics, calculateFatigueLife, generateDegradationCurve, FIBER, MATRIX, FATIGUE_A, FATIGUE_B } from "@/lib/grafter-engine";
 import { Beaker, FileText, PanelLeftClose, PanelLeft } from "lucide-react";
@@ -95,6 +96,7 @@ const GrafterDashboard = () => {
           <DegradationChart data={degradation} totalCycles={fatigue.cycles} />
           <SNChart strength={result.strength} appliedStress={appliedStress} fatigueA={fatigueA} fatigueB={fatigueB} />
           <MaterialComparison />
+          <RadarComparison />
           <CarbonROISimulator />
         </main>
       </div>
