@@ -96,6 +96,7 @@ const GrafterDashboard = () => {
           <DegradationChart data={degradation} totalCycles={fatigue.cycles} />
           <SNChart strength={result.strength} appliedStress={appliedStress} fatigueA={fatigueA} fatigueB={fatigueB} />
           <MaterialComparison />
+          <RadarComparison />
           <CarbonROISimulator />
         </main>
       </div>
