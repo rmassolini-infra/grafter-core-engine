@@ -24,12 +24,19 @@ export const FATIGUE_B = 10;
 /**
  * Halpin-Tsai stiffness + Zhu et al. strength
  */
-export const calculateGrafterMetrics = (v_f: number, aspect_ratio: number): GrafterResult => {
-  const eta = (FIBER.E / MATRIX.E - 1) / (FIBER.E / MATRIX.E + 2 * aspect_ratio);
-  const stiffness = MATRIX.E * (1 + 2 * aspect_ratio * eta * v_f) / (1 - eta * v_f);
+export const calculateGrafterMetrics = (
+  v_f: number,
+  aspect_ratio: number,
+  fiberE: number = FIBER.E,
+  fiberSigma: number = FIBER.sigma_u,
+  matrixE: number = MATRIX.E,
+  matrixSigma: number = MATRIX.sigma_u
+): GrafterResult => {
+  const eta = (fiberE / matrixE - 1) / (fiberE / matrixE + 2 * aspect_ratio);
+  const stiffness = matrixE * (1 + 2 * aspect_ratio * eta * v_f) / (1 - eta * v_f);
 
-  const directStrengthening = v_f * FIBER.sigma_u * ORIENTATION_FACTOR * 0.8;
-  const matrixContribution = (1 - v_f) * MATRIX.sigma_u;
+  const directStrengthening = v_f * fiberSigma * ORIENTATION_FACTOR * 0.8;
+  const matrixContribution = (1 - v_f) * matrixSigma;
   const strength = directStrengthening + matrixContribution;
 
   return {
