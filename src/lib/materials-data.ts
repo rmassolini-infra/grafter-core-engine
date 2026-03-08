@@ -6,6 +6,7 @@ export interface MaterialData {
   flexuralModulus: number; // GPa
   density: number; // g/cm³
   co2PerKg: number; // kg CO2 per kg produced
+  fractureToughness: number; // K1c in MPa·m^1/2
   biodegradable: boolean;
   recyclable: boolean;
   source?: string;
