@@ -6,7 +6,7 @@ import { SNChart } from "./grafter/SNChart";
 import { MaterialComparison } from "./grafter/MaterialComparison";
 import { CarbonROISimulator } from "./grafter/CarbonROISimulator";
 import { ReportModal } from "./grafter/ReportModal";
-import { calculateGrafterMetrics, calculateFatigueLife, generateDegradationCurve } from "@/lib/grafter-engine";
+import { calculateGrafterMetrics, calculateFatigueLife, generateDegradationCurve, FIBER, MATRIX, FATIGUE_A, FATIGUE_B } from "@/lib/grafter-engine";
 import { Beaker, FileText, PanelLeftClose, PanelLeft } from "lucide-react";
 
 const GrafterDashboard = () => {
@@ -16,26 +16,43 @@ const GrafterDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [reportOpen, setReportOpen] = useState(false);
 
-  const result = useMemo(() => calculateGrafterMetrics(vf, aspectRatio), [vf, aspectRatio]);
-  const fatigue = useMemo(() => calculateFatigueLife(appliedStress, result.strength), [appliedStress, result.strength]);
-  const degradation = useMemo(() => generateDegradationCurve(result.stiffness, fatigue.cycles), [result.stiffness, fatigue.cycles]);
+  // Editable material & fatigue constants
+  const [fiberE, setFiberE] = useState<number>(FIBER.E);
+  const [fiberSigma, setFiberSigma] = useState<number>(FIBER.sigma_u);
+  const [matrixE, setMatrixE] = useState<number>(MATRIX.E);
+  const [matrixSigma, setMatrixSigma] = useState<number>(MATRIX.sigma_u);
+  const [fatigueA, setFatigueA] = useState<number>(FATIGUE_A);
+  const [fatigueB, setFatigueB] = useState<number>(FATIGUE_B);
+
+  const result = useMemo(
+    () => calculateGrafterMetrics(vf, aspectRatio, fiberE, fiberSigma, matrixE, matrixSigma),
+    [vf, aspectRatio, fiberE, fiberSigma, matrixE, matrixSigma]
+  );
+  const fatigue = useMemo(
+    () => calculateFatigueLife(appliedStress, result.strength, fatigueA, fatigueB),
+    [appliedStress, result.strength, fatigueA, fatigueB]
+  );
+  const degradation = useMemo(
+    () => generateDegradationCurve(result.stiffness, fatigue.cycles),
+    [result.stiffness, fatigue.cycles]
+  );
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
       <InputSidebar
         open={sidebarOpen}
-        vf={vf}
-        onVfChange={setVf}
-        aspectRatio={aspectRatio}
-        onAspectRatioChange={setAspectRatio}
-        appliedStress={appliedStress}
-        onAppliedStressChange={setAppliedStress}
+        vf={vf} onVfChange={setVf}
+        aspectRatio={aspectRatio} onAspectRatioChange={setAspectRatio}
+        appliedStress={appliedStress} onAppliedStressChange={setAppliedStress}
+        fiberE={fiberE} onFiberEChange={setFiberE}
+        fiberSigma={fiberSigma} onFiberSigmaChange={setFiberSigma}
+        matrixE={matrixE} onMatrixEChange={setMatrixE}
+        matrixSigma={matrixSigma} onMatrixSigmaChange={setMatrixSigma}
+        fatigueA={fatigueA} onFatigueAChange={setFatigueA}
+        fatigueB={fatigueB} onFatigueBChange={setFatigueB}
       />
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
-        {/* Header */}
         <header className="h-14 border-b border-border flex items-center justify-between px-4 sm:px-6 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <button
@@ -68,7 +85,6 @@ const GrafterDashboard = () => {
           </div>
         </header>
 
-        {/* Dashboard Content */}
         <main className="flex-1 p-4 sm:p-6 space-y-6 overflow-auto">
           <MetricCards
             stiffness={result.stiffness}
@@ -76,28 +92,22 @@ const GrafterDashboard = () => {
             cycles={fatigue.cycles}
             stressRatio={fatigue.stressRatio}
           />
-
           <DegradationChart data={degradation} totalCycles={fatigue.cycles} />
-
-          <SNChart strength={result.strength} appliedStress={appliedStress} />
-
+          <SNChart strength={result.strength} appliedStress={appliedStress} fatigueA={fatigueA} fatigueB={fatigueB} />
           <MaterialComparison />
-
           <CarbonROISimulator />
         </main>
       </div>
 
-      {/* Report Modal */}
       <ReportModal
         open={reportOpen}
         onClose={() => setReportOpen(false)}
-        vf={vf}
-        aspectRatio={aspectRatio}
-        appliedStress={appliedStress}
-        stiffness={result.stiffness}
-        strength={result.strength}
-        cycles={fatigue.cycles}
-        stressRatio={fatigue.stressRatio}
+        vf={vf} aspectRatio={aspectRatio} appliedStress={appliedStress}
+        stiffness={result.stiffness} strength={result.strength}
+        cycles={fatigue.cycles} stressRatio={fatigue.stressRatio}
+        fiberE={fiberE} fiberSigma={fiberSigma}
+        matrixE={matrixE} matrixSigma={matrixSigma}
+        fatigueA={fatigueA} fatigueB={fatigueB}
       />
     </div>
   );

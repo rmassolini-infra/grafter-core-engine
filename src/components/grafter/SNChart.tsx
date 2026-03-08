@@ -8,15 +8,16 @@ import { calculateFatigueLife, formatCycles } from "@/lib/grafter-engine";
 interface SNChartProps {
   strength: number;
   appliedStress: number;
+  fatigueA: number;
+  fatigueB: number;
 }
 
-export const SNChart = ({ strength, appliedStress }: SNChartProps) => {
+export const SNChart = ({ strength, appliedStress, fatigueA, fatigueB }: SNChartProps) => {
   const data = useMemo(() => {
     const points: { stress: number; cycles: number; logCycles: number }[] = [];
-    // Generate S-N curve from 5% to 95% of strength
     for (let pct = 5; pct <= 95; pct += 2) {
       const stress = (pct / 100) * strength;
-      const result = calculateFatigueLife(stress, strength);
+      const result = calculateFatigueLife(stress, strength, fatigueA, fatigueB);
       if (result.cycles > 0) {
         points.push({
           stress: parseFloat(stress.toFixed(1)),
@@ -26,16 +27,16 @@ export const SNChart = ({ strength, appliedStress }: SNChartProps) => {
       }
     }
     return points;
-  }, [strength]);
+  }, [strength, fatigueA, fatigueB]);
 
   const currentPoint = useMemo(() => {
-    const result = calculateFatigueLife(appliedStress, strength);
+    const result = calculateFatigueLife(appliedStress, strength, fatigueA, fatigueB);
     return {
       stress: appliedStress,
       cycles: result.cycles,
       logCycles: result.cycles > 0 ? parseFloat(Math.log10(result.cycles).toFixed(2)) : 0,
     };
-  }, [appliedStress, strength]);
+  }, [appliedStress, strength, fatigueA, fatigueB]);
 
   return (
     <div className="data-card">
@@ -43,7 +44,7 @@ export const SNChart = ({ strength, appliedStress }: SNChartProps) => {
         <div>
           <span className="section-label">Curva S-N (Wöhler)</span>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Tensão vs. Vida em Fadiga — log(N<sub>f</sub>) = A − B·(σ/σ<sub>max</sub>)
+            Tensão vs. Vida em Fadiga — log(N<sub>f</sub>) = {fatigueA} − {fatigueB}·(σ/σ<sub>max</sub>)
           </p>
         </div>
         <span className="text-[9px] font-mono text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">Laribi et al.</span>
@@ -86,20 +87,8 @@ export const SNChart = ({ strength, appliedStress }: SNChartProps) => {
               }}
               labelFormatter={(val) => `log₁₀(N) = ${val}  →  N ≈ ${formatCycles(Math.round(Math.pow(10, Number(val))))}`}
             />
-            <Area
-              type="monotone"
-              dataKey="stress"
-              stroke="none"
-              fill="url(#snGradient)"
-            />
-            <Line
-              type="monotone"
-              dataKey="stress"
-              stroke="hsl(160 84% 39%)"
-              strokeWidth={2}
-              dot={false}
-              name="stress"
-            />
+            <Area type="monotone" dataKey="stress" stroke="none" fill="url(#snGradient)" />
+            <Line type="monotone" dataKey="stress" stroke="hsl(160 84% 39%)" strokeWidth={2} dot={false} name="stress" />
             {currentPoint.cycles > 0 && (
               <ReferenceDot
                 x={currentPoint.logCycles}
@@ -114,7 +103,6 @@ export const SNChart = ({ strength, appliedStress }: SNChartProps) => {
         </ResponsiveContainer>
       </div>
 
-      {/* Current point legend */}
       {currentPoint.cycles > 0 && (
         <div className="flex items-center gap-2 mt-2 justify-center">
           <div className="h-3 w-3 rounded-full bg-destructive border-2 border-foreground" />
