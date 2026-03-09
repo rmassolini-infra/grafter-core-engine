@@ -166,6 +166,16 @@ export const MaterialComparison = ({ dynamicJutePP }: MaterialComparisonProps) =
       </div>
 
       {/* Material table */}
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[10px] text-muted-foreground font-mono">Tabela de Propriedades</span>
+        <button
+          onClick={exportToCSV}
+          className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono rounded-md bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+        >
+          <Download className="h-3 w-3" />
+          Exportar CSV
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-[11px] font-mono">
           <thead>
