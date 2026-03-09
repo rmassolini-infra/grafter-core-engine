@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from "recharts";
 import { MATERIALS, CATEGORY_LABELS, type MaterialData } from "@/lib/materials-data";
-import { BarChart3, Check, X, Leaf } from "lucide-react";
+import { BarChart3, Check, X, Leaf, Download } from "lucide-react";
 
 type MetricKey = "tensileStrength" | "flexuralModulus" | "density" | "co2PerKg" | "fractureToughness";
 
