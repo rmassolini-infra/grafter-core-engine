@@ -49,7 +49,32 @@ export const MaterialComparison = ({ dynamicJutePP }: MaterialComparisonProps) =
   const currentMetric = METRICS.find((m) => m.key === metric)!;
   const isLive = !!dynamicJutePP;
 
-  return (
+  const exportToCSV = useCallback(() => {
+    const headers = ["Material", "Categoria", "σ (MPa)", "E (GPa)", "K₁c (MPa·m½)", "ρ (g/cm³)", "CO₂/kg", "Biodegradável", "Reciclável"];
+    const rows = materials.map((m) => [
+      m.name,
+      CATEGORY_LABELS[m.category],
+      m.tensileStrength,
+      m.flexuralModulus,
+      m.fractureToughness,
+      m.density,
+      m.co2PerKg,
+      m.biodegradable ? "Sim" : "Não",
+      m.recyclable ? "Sim" : "Não",
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${cell}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `grafter-materiais-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [materials]);
     <div className="data-card space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
