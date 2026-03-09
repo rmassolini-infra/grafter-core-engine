@@ -75,6 +75,8 @@ export const MaterialComparison = ({ dynamicJutePP }: MaterialComparisonProps) =
     link.click();
     URL.revokeObjectURL(url);
   }, [materials]);
+
+  return (
     <div className="data-card space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
