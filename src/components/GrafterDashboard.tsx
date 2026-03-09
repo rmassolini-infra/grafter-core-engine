@@ -7,7 +7,13 @@ import { MaterialComparison } from "./grafter/MaterialComparison";
 import { CarbonROISimulator } from "./grafter/CarbonROISimulator";
 import { RadarComparison } from "./grafter/RadarComparison";
 import { ReportModal } from "./grafter/ReportModal";
-import { calculateGrafterMetrics, calculateFatigueLife, generateDegradationCurve, FIBER, MATRIX, FATIGUE_A, FATIGUE_B } from "@/lib/grafter-engine";
+import {
+  calculateGrafterMetrics,
+  calculateFatigueLife,
+  generateDegradationCurve,
+  FIBER, MATRIX, FATIGUE_A, FATIGUE_B,
+} from "@/lib/grafter-engine";
+import { MATERIALS, type MaterialData } from "@/lib/materials-data";
 import { Beaker, FileText, PanelLeftClose, PanelLeft } from "lucide-react";
 
 const GrafterDashboard = () => {
@@ -25,6 +31,7 @@ const GrafterDashboard = () => {
   const [fatigueA, setFatigueA] = useState<number>(FATIGUE_A);
   const [fatigueB, setFatigueB] = useState<number>(FATIGUE_B);
 
+  // Core engine outputs
   const result = useMemo(
     () => calculateGrafterMetrics(vf, aspectRatio, fiberE, fiberSigma, matrixE, matrixSigma),
     [vf, aspectRatio, fiberE, fiberSigma, matrixE, matrixSigma]
@@ -37,6 +44,30 @@ const GrafterDashboard = () => {
     () => generateDegradationCurve(result.stiffness, fatigue.cycles),
     [result.stiffness, fatigue.cycles]
   );
+
+  /**
+   * FIX 1 — Dynamic Juta/PP material synchronized with engine output.
+   *
+   * The static MATERIALS dataset hardcodes tensileStrength: 54 MPa for "jute-pp".
+   * This override derives the correct values from the live engine calculation,
+   * ensuring MaterialComparison, RadarComparison, and CarbonROISimulator always
+   * display values consistent with the user's configured v_f and aspect ratio.
+   *
+   * stiffness is in MPa → convert to GPa for flexuralModulus field.
+   * density interpolated linearly between fiber (1.48 g/cm³) and matrix (0.91 g/cm³).
+   */
+  const dynamicJutePP = useMemo((): MaterialData => {
+    const baseJutePP = MATERIALS.find((m) => m.id === "jute-pp")!;
+    const densityFiber = 1.48; // juta fiber (g/cm³)
+    const densityMatrix = 0.91; // PP matrix (g/cm³)
+    return {
+      ...baseJutePP,
+      tensileStrength: parseFloat(result.strength.toFixed(1)),
+      flexuralModulus: parseFloat((result.stiffness / 1000).toFixed(3)), // MPa → GPa
+      density: parseFloat((vf * densityFiber + (1 - vf) * densityMatrix).toFixed(3)),
+      source: `Grafter Engine — Halpin-Tsai/Tsai-Pagano (vf=${vf.toFixed(2)}, AR=${aspectRatio})`,
+    };
+  }, [result, vf, aspectRatio]);
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -95,9 +126,10 @@ const GrafterDashboard = () => {
           />
           <DegradationChart data={degradation} totalCycles={fatigue.cycles} />
           <SNChart strength={result.strength} appliedStress={appliedStress} fatigueA={fatigueA} fatigueB={fatigueB} />
-          <MaterialComparison />
-          <RadarComparison />
-          <CarbonROISimulator />
+          {/* Pass dynamicJutePP so comparisons always reflect live engine state */}
+          <MaterialComparison dynamicJutePP={dynamicJutePP} />
+          <RadarComparison dynamicJutePP={dynamicJutePP} />
+          <CarbonROISimulator dynamicJutePP={dynamicJutePP} />
         </main>
       </div>
 

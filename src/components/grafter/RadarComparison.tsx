@@ -4,10 +4,11 @@ import {
   ResponsiveContainer, Legend,
 } from "recharts";
 import { MATERIALS, type MaterialData } from "@/lib/materials-data";
-import { Target } from "lucide-react";
+import { Target, Info } from "lucide-react";
 
-const GRAFTER_MATERIALS = MATERIALS.filter((m) => m.category === "grafter");
-const OTHER_MATERIALS = MATERIALS.filter((m) => m.category !== "grafter");
+interface RadarComparisonProps {
+  dynamicJutePP?: MaterialData;
+}
 
 interface RadarMetric {
   property: string;
@@ -29,18 +30,29 @@ const normalize = (value: number, max: number, invert: boolean) => {
   return invert ? Math.max(1 - ratio, 0) * 100 : ratio * 100;
 };
 
-export const RadarComparison = () => {
+export const RadarComparison = ({ dynamicJutePP }: RadarComparisonProps) => {
+  // Build materials list with dynamic override
+  const allMaterials = useMemo(() => {
+    if (!dynamicJutePP) return MATERIALS;
+    return MATERIALS.map((m) => (m.id === "jute-pp" ? dynamicJutePP : m));
+  }, [dynamicJutePP]);
+
+  const GRAFTER_MATERIALS = allMaterials.filter((m) => m.category === "grafter");
+  const OTHER_MATERIALS = allMaterials.filter((m) => m.category !== "grafter");
+
   const [grafterId, setGrafterId] = useState(GRAFTER_MATERIALS[0]?.id ?? "");
   const [otherId, setOtherId] = useState(OTHER_MATERIALS[0]?.id ?? "");
 
-  const grafterMat = MATERIALS.find((m) => m.id === grafterId)!;
-  const otherMat = MATERIALS.find((m) => m.id === otherId)!;
+  const grafterMat = allMaterials.find((m) => m.id === grafterId)!;
+  const otherMat = allMaterials.find((m) => m.id === otherId)!;
+
+  const isLive = dynamicJutePP && grafterId === "jute-pp";
 
   const data = useMemo(() => {
     // Find max for each metric across all materials for normalization
     const maxes: Record<string, number> = {};
     RADAR_METRICS.forEach(({ key }) => {
-      maxes[key as string] = Math.max(...MATERIALS.map((m) => m[key] as number));
+      maxes[key as string] = Math.max(...allMaterials.map((m) => m[key] as number));
     });
 
     return RADAR_METRICS.map(({ property, key, invert }) => ({
@@ -48,13 +60,21 @@ export const RadarComparison = () => {
       grafter: parseFloat(normalize(grafterMat[key] as number, maxes[key as string], !!invert).toFixed(1)),
       other: parseFloat(normalize(otherMat[key] as number, maxes[key as string], !!invert).toFixed(1)),
     }));
-  }, [grafterMat, otherMat]);
+  }, [grafterMat, otherMat, allMaterials]);
 
   return (
     <div className="data-card space-y-4">
-      <div className="flex items-center gap-2">
-        <Target className="h-4 w-4 text-primary" />
-        <span className="section-label">Comparação Radar</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Target className="h-4 w-4 text-primary" />
+          <span className="section-label">Comparação Radar</span>
+        </div>
+        {isLive && (
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary/10 border border-primary/20">
+            <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-[10px] font-mono text-primary">Juta/PP live</span>
+          </div>
+        )}
       </div>
 
       {/* Selectors */}
@@ -73,9 +93,18 @@ export const RadarComparison = () => {
                 }`}
               >
                 {m.name}
+                {m.id === "jute-pp" && dynamicJutePP && (
+                  <span className="ml-1 text-primary/60">↻</span>
+                )}
               </button>
             ))}
           </div>
+          {isLive && (
+            <p className="text-[9px] text-primary/70 font-mono mt-1.5 flex items-center gap-1">
+              <Info className="h-2.5 w-2.5" />
+              σ = {dynamicJutePP!.tensileStrength} MPa · E = {(dynamicJutePP!.flexuralModulus * 1000).toFixed(0)} MPa
+            </p>
+          )}
         </div>
         <div>
           <label className="input-label">Comparar com</label>
