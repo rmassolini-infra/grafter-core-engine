@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from "recharts";
 import { MATERIALS, CATEGORY_LABELS, type MaterialData } from "@/lib/materials-data";
-import { BarChart3, Check, X, Leaf } from "lucide-react";
+import { BarChart3, Check, X, Leaf, Download } from "lucide-react";
 
 type MetricKey = "tensileStrength" | "flexuralModulus" | "density" | "co2PerKg" | "fractureToughness";
 
@@ -48,6 +48,33 @@ export const MaterialComparison = ({ dynamicJutePP }: MaterialComparisonProps) =
 
   const currentMetric = METRICS.find((m) => m.key === metric)!;
   const isLive = !!dynamicJutePP;
+
+  const exportToCSV = useCallback(() => {
+    const headers = ["Material", "Categoria", "σ (MPa)", "E (GPa)", "K₁c (MPa·m½)", "ρ (g/cm³)", "CO₂/kg", "Biodegradável", "Reciclável"];
+    const rows = materials.map((m) => [
+      m.name,
+      CATEGORY_LABELS[m.category],
+      m.tensileStrength,
+      m.flexuralModulus,
+      m.fractureToughness,
+      m.density,
+      m.co2PerKg,
+      m.biodegradable ? "Sim" : "Não",
+      m.recyclable ? "Sim" : "Não",
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) => row.map((cell) => `"${cell}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `grafter-materiais-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [materials]);
 
   return (
     <div className="data-card space-y-4">
@@ -139,6 +166,16 @@ export const MaterialComparison = ({ dynamicJutePP }: MaterialComparisonProps) =
       </div>
 
       {/* Material table */}
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[10px] text-muted-foreground font-mono">Tabela de Propriedades</span>
+        <button
+          onClick={exportToCSV}
+          className="flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono rounded-md bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+        >
+          <Download className="h-3 w-3" />
+          Exportar CSV
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-[11px] font-mono">
           <thead>
